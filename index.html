@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Financial Regulation Lab</title>
+<meta name="author" content="Jacob Gerszten">
+<meta name="description" content="An independent, AI-assisted research project tracking every live U.S. financial-regulation proposal and publishing a weekly, human-reviewed note on what they mean for policy.">
+<style>
+  :root{
+    --paper:#fbfaf7; --panel:#ffffff; --ink:#1c1b19; --ink-soft:#55514b;
+    --line:#e7e2d8; --line-soft:#f0ece3; --accent:#2d4a8a; --accent-soft:#eaeef6;
+    --warm:#c45b28; --green:#2f7d56; --green-soft:#e4f3ec; --gold:#b0992a; --red:#c0506a;
+    --shadow:0 1px 2px rgba(40,33,20,.05),0 8px 24px rgba(40,33,20,.06);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+  header.hero{padding:54px 0 28px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warm);font-weight:600;margin:0 0 13px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.07;margin:0 0 15px;letter-spacing:-.01em}
+  .lede{font-family:var(--serif);font-size:clamp(17px,2.2vw,20px);color:var(--ink-soft);max-width:64ch;margin:0 0 14px}
+  .lede b{color:var(--ink);font-weight:600}
+  .byline{font-size:14.5px;color:var(--ink-soft);margin:0 0 24px}
+  .byline b{color:var(--ink)}
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px;box-shadow:var(--shadow)}
+  .stat .n{font-family:var(--serif);font-size:28px;font-weight:600;line-height:1}
+  .stat .l{font-size:12px;color:var(--ink-soft);margin-top:6px}
+
+  nav.toc{position:sticky;top:0;z-index:30;background:rgba(251,250,247,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.toc .wrap{display:flex;gap:4px;padding:9px 22px}
+  nav.toc a{font-size:13.5px;color:var(--ink-soft);padding:6px 13px;border-radius:999px;font-weight:500}
+  nav.toc a:hover{background:var(--line-soft);text-decoration:none}
+  nav.toc a.on{background:var(--accent);color:#fff}
+
+  section{padding:40px 0;border-bottom:1px solid var(--line)}
+  .seclabel{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--warm);font-weight:600;margin:0 0 8px}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3.2vw,30px);margin:0 0 10px;letter-spacing:-.01em}
+  .sub{color:var(--ink-soft);max-width:68ch;margin:0 0 20px;font-size:15.5px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  input[type=search]{font-family:var(--sans);font-size:14px;padding:9px 13px;border:1px solid var(--line);border-radius:9px;width:260px;background:var(--panel);color:var(--ink)}
+  input[type=search]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+  .toggle{font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .chip{font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);cursor:pointer;background:var(--panel);user-select:none}
+  .chip:hover{border-color:#c9c2b4}
+  .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .chip .c{opacity:.6;margin-left:5px}
+
+  .prop{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-bottom:11px;box-shadow:var(--shadow)}
+  .prop .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:7px}
+  .badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent)}
+  .ptype{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--line-soft);color:var(--ink-soft)}
+  .deadline{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--green-soft);color:var(--green)}
+  .deadline.soon{background:#fbe6e9;color:var(--red)}
+  .prop h3{font-size:16px;margin:0 0 5px;line-height:1.3;font-weight:600}
+  .prop h3 a{color:var(--ink)} .prop h3 a:hover{color:var(--accent)}
+  .prop .ab{font-size:13.5px;color:var(--ink-soft);margin:0 0 6px;line-height:1.5}
+  .prop .meta{font-size:12px;color:var(--ink-soft)}
+  .count{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+
+  .note-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px}
+  .empty{background:var(--panel);border:1px dashed var(--line);border-radius:13px;padding:30px;text-align:center;color:var(--ink-soft)}
+  .empty b{color:var(--ink)}
+
+  .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:8px 0 18px}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+  .step .num{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+  .step h4{font-size:14px;margin:0 0 4px;font-weight:600}
+  .step p{font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.45}
+  .gate{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 20px;font-size:14px;color:var(--ink-soft);line-height:1.6}
+  .gate b{color:var(--ink)}
+
+  footer{padding:34px 0 66px;color:var(--ink-soft);font-size:13px}
+  footer p{margin:0 0 9px;line-height:1.6;max-width:74ch}
+  footer b{color:var(--ink)}
+  .upd{font-size:12px;color:var(--ink-soft);margin-top:6px}
+  @media(max-width:760px){ .statband{grid-template-columns:repeat(2,1fr)} .pipeline{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <p class="kicker">An independent · AI-assisted · human-reviewed research project</p>
+  <h1>The Financial Regulation Lab</h1>
+  <p class="lede">A one-person research desk that <b>tracks every live U.S. financial-regulation proposal</b> and publishes a weekly, human-reviewed <b>note</b> on what the most consequential ones mean for policy.</p>
+  <p class="byline">By <b>Jacob Gerszten</b> · Independent researcher · drafted with AI, reviewed and approved by a human before anything is published</p>
+  <div class="statband" id="statband"></div>
+</div></header>
+
+<nav class="toc"><div class="wrap" id="toc"></div></nav>
+
+<main>
+  <section id="radar"><div class="wrap">
+    <p class="seclabel">The regulatory radar</p>
+    <h2>Every live proposal, in one place</h2>
+    <p class="sub">Proposed and recently finalized rules from the nine core U.S. financial regulators, pulled straight from the Federal Register. Open comment windows are listed first — these are the proposals you can still weigh in on. Search, or filter by agency.</p>
+    <div class="controls">
+      <input type="search" id="q" placeholder="Search proposals…">
+      <label class="toggle"><input type="checkbox" id="openOnly"> Open comment windows only</label>
+    </div>
+    <div class="chips" id="agencyChips"></div>
+    <div class="count" id="radarCount"></div>
+    <div id="radarList"></div>
+  </div></section>
+
+  <section id="notes"><div class="wrap">
+    <p class="seclabel">The notes</p>
+    <h2>Weekly research notes</h2>
+    <p class="sub">Each week, the Lab picks one consequential proposal from the radar and publishes a concise, law-review-style note: what it does, the legal authority it rests on, who it affects, and how it fits the broader policy debate. Every note is human-reviewed and carries a full AI-use disclosure.</p>
+    <div id="notesList"></div>
+  </div></section>
+
+  <section id="method"><div class="wrap">
+    <p class="seclabel">How it works</p>
+    <h2>Method &amp; guardrails</h2>
+    <p class="sub">The Lab is a pipeline with a human in the loop. AI does the heavy lifting; a person makes the call before anything is published.</p>
+    <div class="pipeline">
+      <div class="step"><div class="num">1</div><h4>Track</h4><p>Refresh the radar from the Federal Register and surface the week's most consequential proposals.</p></div>
+      <div class="step"><div class="num">2</div><h4>Draft</h4><p>Pull the primary sources and draft a note in a consistent law-review style, with every citation tied to retrieved text.</p></div>
+      <div class="step"><div class="num">3</div><h4>Verify &amp; review</h4><p>Check each citation against its source, flag anything unverifiable — then a human reads, edits, and approves.</p></div>
+      <div class="step"><div class="num">4</div><h4>Publish</h4><p>Only after sign-off: the note goes live with a PDF, and the scorecard updates.</p></div>
+    </div>
+    <div class="gate"><b>The approval gate is the point.</b> Language models can invent plausible-looking cases and citations, and in a policy tool a confident error is worse than an obvious one. Nothing here is published autonomously: a human reviews and approves every note, every citation is checked against its source, and each note carries a disclosure of how AI was used. This is a research aid, not legal advice.</div>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>About.</b> The Financial Regulation Lab is an independent research project by Jacob Gerszten. The radar's facts come directly from the U.S. Federal Register; the notes are drafted with the assistance of AI and reviewed, edited, and approved by a human before publication. Nothing here is legal advice.</p>
+  <p class="upd" id="updated"></p>
+</div></footer>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  var T = window.TANK || {radar:{items:[],agency_counts:{}}, notes:[], scorecard:{}};
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var sc = T.scorecard || {};
+  var radar = T.radar || {items:[], agency_counts:{}};
+  var items = radar.items || [];
+  var todayISO = (sc.radar_updated||"").slice(0,10);
+
+  /* ---- scorecard strip ---- */
+  function daysSince(d){ if(!d) return null; var a=new Date(d+"T00:00:00"), b=new Date((todayISO||d)+"T00:00:00"); return Math.max(0,Math.round((b-a)/86400000)); }
+  var stats = [
+    [sc.proposals_tracked!=null?sc.proposals_tracked:items.length, "proposals tracked"],
+    [sc.open_comment_windows!=null?sc.open_comment_windows:"—", "open comment windows"],
+    [sc.notes_published!=null?sc.notes_published:0, "notes published"],
+    [sc.launched? (new Date(sc.launched+"T00:00:00").toLocaleDateString("en-US",{month:"short",year:"numeric"})) : "new", "tracking since"]
+  ];
+  var sb=$("#statband");
+  stats.forEach(function(s){ var d=document.createElement("div"); d.className="stat"; d.innerHTML='<div class="n">'+s[0]+'</div><div class="l">'+s[1]+'</div>'; sb.appendChild(d); });
+
+  /* ---- nav ---- */
+  var SECS=[["radar","Radar"],["notes","Notes"],["method","Method"]];
+  var toc=$("#toc");
+  SECS.forEach(function(s){var a=document.createElement("a");a.href="#"+s[0];a.textContent=s[1];a.dataset.s=s[0];toc.appendChild(a);});
+  var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){toc.querySelectorAll("a").forEach(function(a){a.classList.toggle("on",a.dataset.s===e.target.id);});}});},{rootMargin:"-40% 0px -55% 0px"});
+  SECS.forEach(function(s){var el=document.getElementById(s[0]);if(el)obs.observe(el);});
+
+  /* ---- radar ---- */
+  var state={q:"", agency:null, openOnly:false};
+  var counts = radar.agency_counts || {};
+  var order = Object.keys(counts).sort(function(a,b){return counts[b]-counts[a]});
+  var chipWrap=$("#agencyChips");
+  function chip(label, key, n){
+    var c=document.createElement("div"); c.className="chip"+(state.agency===key?" on":"");
+    c.innerHTML=label+(n!=null?'<span class="c">'+n+'</span>':"");
+    c.onclick=function(){ state.agency=(state.agency===key?null:key); renderChips(); renderRadar(); };
+    return c;
+  }
+  function renderChips(){
+    chipWrap.innerHTML="";
+    var all=chip("All", null, items.length); chipWrap.appendChild(all);
+    order.forEach(function(k){ chipWrap.appendChild(chip(k,k,counts[k])); });
+  }
+  function daysTo(d){ if(!d) return null; var a=new Date((todayISO||"")+"T00:00:00"), b=new Date(d+"T00:00:00"); return Math.round((b-a)/86400000); }
+  function match(it){
+    if(state.openOnly && !it.comment_open) return false;
+    if(state.agency && (it.agencies||[]).indexOf(state.agency)<0) return false;
+    if(state.q){ var q=state.q.toLowerCase(); if((it.title||"").toLowerCase().indexOf(q)<0 && (it.abstract||"").toLowerCase().indexOf(q)<0) return false; }
+    return true;
+  }
+  function renderRadar(){
+    var list=$("#radarList"); list.innerHTML="";
+    var rows=items.filter(match);
+    $("#radarCount").textContent=rows.length+" of "+items.length+" proposals"+(state.agency?" · "+state.agency:"")+(state.openOnly?" · open comment windows":"");
+    rows.slice(0,120).forEach(function(it){
+      var d=document.createElement("div"); d.className="prop";
+      var badges=(it.agencies||[]).map(function(a){return '<span class="badge">'+a+'</span>'}).join("");
+      var dl="";
+      if(it.comment_open){ var dt=daysTo(it.comments_close); dl='<span class="deadline'+(dt!=null&&dt<=14?' soon':'')+'">Comment by '+it.comments_close+(dt!=null?' · '+dt+'d left':'')+'</span>'; }
+      d.innerHTML='<div class="top">'+badges+'<span class="ptype">'+it.type_label+'</span>'+dl+'</div>'+
+        '<h3><a href="'+it.url+'" target="_blank" rel="noopener">'+it.title+'</a></h3>'+
+        (it.abstract?'<p class="ab">'+it.abstract+'</p>':'')+
+        '<div class="meta">Published '+(it.published||"")+(it.docket?' · '+it.docket:'')+'</div>';
+      list.appendChild(d);
+    });
+    if(rows.length>120){ var m=document.createElement("div"); m.className="count"; m.textContent="Showing first 120; refine with search or an agency filter."; list.appendChild(m); }
+    if(!rows.length){ list.innerHTML='<div class="empty">No proposals match. Clear the filters or search.</div>'; }
+  }
+  $("#q").oninput=function(){state.q=this.value.trim();renderRadar();};
+  $("#openOnly").onchange=function(){state.openOnly=this.checked;renderRadar();};
+  renderChips(); renderRadar();
+
+  /* ---- notes ---- */
+  var nl=$("#notesList");
+  if((T.notes||[]).length){
+    T.notes.forEach(function(n){
+      var c=document.createElement("div"); c.className="note-card";
+      c.innerHTML='<div class="top">'+(n.agencies||[]).map(function(a){return '<span class="badge">'+a+'</span>'}).join("")+'<span class="ptype">'+(n.published_date||"")+'</span></div>'+
+        '<h3 style="font-family:var(--serif);font-size:20px;margin:8px 0 4px">'+n.title+'</h3>'+
+        (n.subtitle?'<p class="ab" style="font-style:italic">'+n.subtitle+'</p>':'')+
+        (n.summary?'<p class="ab">'+n.summary+'</p>':'')+
+        (n.pdf?'<a href="'+n.pdf+'" style="font-weight:600">Download PDF →</a>':'');
+      nl.appendChild(c);
+    });
+  } else {
+    nl.innerHTML='<div class="empty"><b>The first note is in production.</b><br>Published research notes will appear here — one a week, each human-reviewed before it goes live.</div>';
+  }
+
+  /* ---- footer timestamp ---- */
+  if(sc.radar_updated){ $("#updated").textContent="Radar last refreshed "+sc.radar_updated.replace("T"," ")+". Data source: U.S. Federal Register."; }
+})();
+</script>
+</body>
+</html>
