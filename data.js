@@ -1,5 +1,5 @@
 window.TANK = {
- "built_at": "2026-06-21T11:32:19",
+ "built_at": "2026-06-21T22:41:20",
  "radar": {
   "generated_at": "2026-06-21T11:24:54",
   "count": 146,

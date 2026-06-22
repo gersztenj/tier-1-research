@@ -82,26 +82,70 @@
   footer p{margin:0 0 9px;line-height:1.6;max-width:74ch}
   footer b{color:var(--ink)}
   .upd{font-size:12px;color:var(--ink-soft);margin-top:6px}
-  @media(max-width:760px){ .statband{grid-template-columns:repeat(2,1fr)} .pipeline{grid-template-columns:1fr 1fr} }
+  /* positioning band */
+  .position{background:#f2eee4;border-bottom:1px solid var(--line)}
+  .position .wrap{padding:26px 22px}
+  .pos-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:28px;align-items:start}
+  .pos-lead{font-size:15px;color:var(--ink-soft);line-height:1.6}
+  .pk{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);display:block;margin-bottom:5px}
+  .pos-points{display:flex;flex-direction:column;gap:9px}
+  .pos-points > div{font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+  .pos-points b{color:var(--ink)}
+  /* what every note delivers */
+  .delivers{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px 10px;box-shadow:var(--shadow);margin-bottom:20px}
+  .delivers .dh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--warm);font-weight:600;margin:0 0 11px}
+  ol.dl-list{margin:0;padding-left:20px}
+  ol.dl-list li{font-size:14px;color:var(--ink-soft);margin-bottom:10px;line-height:1.5}
+  ol.dl-list li b{color:var(--ink)}
+  .wedge{display:inline-block;font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-left:4px}
+  @media(max-width:760px){ .statband{grid-template-columns:repeat(2,1fr)} .pipeline{grid-template-columns:1fr 1fr} .pos-grid{grid-template-columns:1fr;gap:16px} }
 </style>
 </head>
 <body>
 
 <header class="hero"><div class="wrap">
-  <p class="kicker">An independent · AI-assisted · human-reviewed research project</p>
+  <p class="kicker">Independent · AI-assisted · human-reviewed financial-regulation research</p>
   <h1>Tier 1 Research</h1>
-  <p class="lede">A one-person research desk that <b>tracks every live U.S. financial-regulation proposal</b> and publishes a weekly, human-reviewed <b>note</b> on what the most consequential ones mean for policy.</p>
-  <p class="byline">By <b>Jacob Gerszten</b> · Independent researcher · drafted with AI, reviewed and approved by a human before anything is published</p>
+  <p class="lede">Most regulatory feeds tell you <b>what changed</b>. Tier 1 Research tells you <b>what it means</b> — whether a proposal is lawful, workable, and likely to survive a court. An independent desk that reads the consequential financial-regulation proposals closely and publishes one verified, human-reviewed <b>note</b> on each.</p>
+  <p class="byline">By <b>Jacob Gerszten</b> · Independent researcher · every note reviewed and approved by a human before it's published</p>
   <div class="statband" id="statband"></div>
 </div></header>
+
+<div class="position"><div class="wrap">
+  <div class="pos-grid">
+    <div class="pos-lead"><span class="pk">Analysis, not alerts.</span> A monitoring feed flags every change the moment it lands. Tier 1 Research does the opposite — it ignores the routine, goes deep on what matters, and tells you whether the rule will actually hold up.</div>
+    <div class="pos-points">
+      <div><b>Depth over breadth</b> — the consequential few, read closely, not everything skimmed.</div>
+      <div><b>Verified, not generated</b> — every citation checked against its source by a human.</div>
+      <div><b>A view, not a summary</b> — is the rule within the agency's authority? workable? durable?</div>
+    </div>
+  </div>
+</div></div>
 
 <nav class="toc"><div class="wrap" id="toc"></div></nav>
 
 <main>
+  <section id="notes"><div class="wrap">
+    <p class="seclabel">The research</p>
+    <h2>The notes</h2>
+    <p class="sub">Each week, one consequential proposal gets a close, law-review-style reading — not a summary, an analysis. Every note is human-reviewed, every source verified against the original, and the AI's role disclosed.</p>
+    <div class="delivers">
+      <p class="dh">What every note delivers</p>
+      <ol class="dl-list">
+        <li><b>What it does</b> — the operative change, in plain language, pinpoint-cited to the rule.</li>
+        <li><b>Legal authority &amp; durability</b> — the statute the agency relies on, and the rule's exposure under the major-questions doctrine and post-<i>Loper Bright</i> review: will it survive a challenge? <span class="wedge">the question a feed can't answer</span></li>
+        <li><b>Stakes</b> — who is affected, and the real trade-offs.</li>
+        <li><b>The assessment</b> — a clearly-marked view: is this lawful, workable, and wise?</li>
+        <li><b>The comment window</b> — the deadline and what's genuinely at issue, while you can still act.</li>
+      </ol>
+    </div>
+    <div id="notesList"></div>
+  </div></section>
+
   <section id="radar"><div class="wrap">
-    <p class="seclabel">The regulatory radar</p>
-    <h2>Every live proposal, in one place</h2>
-    <p class="sub">Proposed and recently finalized rules from the nine core U.S. financial regulators, pulled straight from the Federal Register. Open comment windows are listed first — these are the proposals you can still weigh in on. Search, or filter by agency.</p>
+    <p class="seclabel">The watchlist</p>
+    <h2>What we're watching</h2>
+    <p class="sub">The full field, so nothing consequential slips past: every live and recently finalized rule from the nine core U.S. financial regulators, straight from the Federal Register. This is the raw material the notes are drawn from — open comment windows first, so you can see what's still in play. Browse it freely; the analysis lives in the notes above.</p>
     <div class="controls">
       <input type="search" id="q" placeholder="Search proposals…">
       <label class="toggle"><input type="checkbox" id="openOnly"> Open comment windows only</label>
@@ -111,29 +155,22 @@
     <div id="radarList"></div>
   </div></section>
 
-  <section id="notes"><div class="wrap">
-    <p class="seclabel">The notes</p>
-    <h2>Weekly research notes</h2>
-    <p class="sub">Each week, Tier 1 Research picks one consequential proposal from the radar and publishes a concise, law-review-style note: what it does, the legal authority it rests on, who it affects, and how it fits the broader policy debate. Every note is human-reviewed and carries a full AI-use disclosure.</p>
-    <div id="notesList"></div>
-  </div></section>
-
   <section id="method"><div class="wrap">
     <p class="seclabel">How it works</p>
     <h2>Method &amp; guardrails</h2>
-    <p class="sub">Tier 1 Research is a pipeline with a human in the loop. AI does the heavy lifting; a person makes the call before anything is published.</p>
+    <p class="sub">A pipeline with a human in the loop — and a deliberate choice to be slow where it counts. AI does the heavy lifting; a person makes the call before anything is published.</p>
     <div class="pipeline">
-      <div class="step"><div class="num">1</div><h4>Track</h4><p>Refresh the radar from the Federal Register and surface the week's most consequential proposals.</p></div>
-      <div class="step"><div class="num">2</div><h4>Draft</h4><p>Pull the primary sources and draft a note in a consistent law-review style, with every citation tied to retrieved text.</p></div>
-      <div class="step"><div class="num">3</div><h4>Verify &amp; review</h4><p>Check each citation against its source, flag anything unverifiable — then a human reads, edits, and approves.</p></div>
-      <div class="step"><div class="num">4</div><h4>Publish</h4><p>Only after sign-off: the note goes live with a PDF, and the scorecard updates.</p></div>
+      <div class="step"><div class="num">1</div><h4>Watch</h4><p>Track the full field from the Federal Register and surface the week's most consequential proposal.</p></div>
+      <div class="step"><div class="num">2</div><h4>Read &amp; analyze</h4><p>Read the primary sources closely — including whether the agency has the authority and whether the rule will survive review.</p></div>
+      <div class="step"><div class="num">3</div><h4>Verify &amp; review</h4><p>Check every citation against its source, flag anything unverifiable — then a human reads, edits, and approves.</p></div>
+      <div class="step"><div class="num">4</div><h4>Publish</h4><p>Only after sign-off does the note go live, with a PDF and an AI-use disclosure.</p></div>
     </div>
-    <div class="gate"><b>The approval gate is the point.</b> Language models can invent plausible-looking cases and citations, and in a policy tool a confident error is worse than an obvious one. Nothing here is published autonomously: a human reviews and approves every note, every citation is checked against its source, and each note carries a disclosure of how AI was used. This is a research aid, not legal advice.</div>
+    <div class="gate"><b>This is research, not a compliance feed.</b> No alerts, no risk scores, no task lists — and nothing published autonomously. A model can invent plausible-looking cases and citations, and in policy a confident error is worse than an obvious one. So a human reviews and approves every note, every citation is checked against its source, and the AI's role is disclosed. Slower, deeper, accountable to a person. Nothing here is legal advice.</div>
   </div></section>
 </main>
 
 <footer><div class="wrap">
-  <p><b>About.</b> Tier 1 Research is an independent research project by Jacob Gerszten. The radar's facts come directly from the U.S. Federal Register; the notes are drafted with the assistance of AI and reviewed, edited, and approved by a human before publication. Nothing here is legal advice.</p>
+  <p><b>About.</b> Tier 1 Research is an independent financial-regulation research desk by Jacob Gerszten — analysis, not a compliance feed. The watchlist's facts come directly from the U.S. Federal Register; the notes are drafted with the assistance of AI and reviewed, edited, and approved by a human before publication. Nothing here is legal advice.</p>
   <p class="upd" id="updated"></p>
 </div></footer>
 
@@ -159,7 +196,7 @@
   stats.forEach(function(s){ var d=document.createElement("div"); d.className="stat"; d.innerHTML='<div class="n">'+s[0]+'</div><div class="l">'+s[1]+'</div>'; sb.appendChild(d); });
 
   /* ---- nav ---- */
-  var SECS=[["radar","Radar"],["notes","Notes"],["method","Method"]];
+  var SECS=[["notes","Notes"],["radar","Watchlist"],["method","Method"]];
   var toc=$("#toc");
   SECS.forEach(function(s){var a=document.createElement("a");a.href="#"+s[0];a.textContent=s[1];a.dataset.s=s[0];toc.appendChild(a);});
   var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){toc.querySelectorAll("a").forEach(function(a){a.classList.toggle("on",a.dataset.s===e.target.id);});}});},{rootMargin:"-40% 0px -55% 0px"});
@@ -223,7 +260,7 @@
       nl.appendChild(c);
     });
   } else {
-    nl.innerHTML='<div class="empty"><b>The first note is in production.</b><br>Published research notes will appear here — one a week, each human-reviewed before it goes live.</div>';
+    nl.innerHTML='<div class="empty"><b>The first note is in production.</b><br>Notes publish here once a human has reviewed and approved them — one consequential proposal a week, read closely.</div>';
   }
 
   /* ---- footer timestamp ---- */
